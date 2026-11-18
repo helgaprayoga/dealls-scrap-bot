@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block isi %}
+
+<!-- ---------- Kartu statistik ---------- -->
+<section class="statistik">
+  <div class="kartu-angka">
+    <div class="label">Total lowongan</div>
+    <div class="nilai">{{ statistik.total | angka }}</div>
+  </div>
+  <div class="kartu-angka">
+    <div class="label">Aktif</div>
+    <div class="nilai">{{ statistik.aktif | angka }}</div>
+  </div>
+  <div class="kartu-angka">
+    <div class="label">Baru hari ini</div>
+    <div class="nilai">{{ statistik.baru_hari_ini | angka }}</div>
+  </div>
+  <div class="kartu-angka">
+    <div class="label">Pelanggan bot</div>
+    <div class="nilai">{{ statistik.pelanggan | angka }}</div>
+  </div>
+  <div class="kartu-angka">
+    <div class="label">Total run</div>
+    <div class="nilai">{{ statistik.total_run | angka }}</div>
+  </div>
+</section>
+
+<!-- ---------- Filter ---------- -->
+<section class="panel">
+  <form class="filter" method="get" action="{{ url_for('beranda') }}">
+    <input type="search" name="q" value="{{ kata }}"
+           placeholder="Cari judul, perusahaan, atau skill..." aria-label="Kata kunci">
+    <select name="status" aria-label="Status">
+      <option value="semua" {{ 'selected' if status == 'semua' }}>Semua status</option>
+      <option value="aktif" {{ 'selected' if status == 'aktif' }}>Aktif</option>
+      <option value="nonaktif" {{ 'selected' if status == 'nonaktif' }}>Tidak aktif</option>
+    </select>
+    <button type="submit">Cari</button>
+    {% if kata or status != 'semua' %}
+      <a class="tombol tombol-kosong" href="{{ url_for('beranda') }}">Reset</a>
+    {% endif %}
+  </form>
+</section>
+
+<!-- ---------- Tabel lowongan ---------- -->
+<section class="panel">
+  <h2>
+    Daftar lowongan
+    <span class="meta" style="color:var(--teks-lemah);font-weight:400">
+      — {{ lowongan.total | angka }} hasil
+    </span>
+  </h2>
+
+  {% if lowongan.data %}
+  <div class="tabel-bungkus">
+    <table>
+      <thead>
+        <tr>
+          <th>Lowongan</th>
+          <th>Tipe</th>
+          <th>Lokasi</th>
+          <th>Gaji</th>
+          <th>Skill</th>
+          <th>Terlihat</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in lowongan.data %}
+        <tr>
+          <td style="min-width:220px">
+            <div class="judul-lowongan">
+              <a href="{{ url_for('detail_lowongan', slug=l.slug) }}">{{ l.title }}</a>
+            </div>
+            <div class="sub">{{ l.company or '—' }}</div>
+          </td>
+          <td>{{ l.job_type or '—' }}</td>
+          <td style="white-space:nowrap">
+            {% if l.work_mode %}<div class="sub">{{ l.work_mode }}</div>{% endif %}
+            {{ l.location or '—' }}
+          </td>
+          <td style="white-space:nowrap">{{ l.salary_text or '—' }}</td>
+          <td style="min-width:180px">
+            {% for s in l.skills %}
+              <span class="label-skill">{{ s }}</span>
+            {% else %}
+              <span class="sub">—</span>
+            {% endfor %}
+          </td>
+          <td style="white-space:nowrap" class="sub">{{ l.first_seen_at | tanggal }}</td>
+          <td>
+            {% if l.is_active %}
+              <span class="lencana lencana-aktif">Aktif</span>
+            {% else %}
+              <span class="lencana lencana-nonaktif">Nonaktif</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ---------- Pagination ---------- -->
+  <div class="pagination">
+    <span class="halaman-info">
+      Halaman {{ lowongan.halaman }} dari {{ lowongan.total_halaman }}
+      ({{ lowongan.per_halaman }} per halaman)
+    </span>
+    <span>
+      {% if lowongan.halaman > 1 %}
+        <a class="tombol tombol-kosong"
+           href="{{ url_for('beranda', q=kata, status=status, halaman=lowongan.halaman - 1) }}">← Sebelumnya</a>
+      {% endif %}
+      {% if lowongan.halaman < lowongan.total_halaman %}
+        <a class="tombol tombol-kosong"
+           href="{{ url_for('beranda', q=kata, status=status, halaman=lowongan.halaman + 1) }}">Berikutnya →</a>
+      {% endif %}
+    </span>
+  </div>
+
+  {% else %}
+  <div class="kosong">
+    <p>Belum ada data lowongan yang cocok.</p>
+    <p>
+      Jalankan <code>python scraper.py</code> untuk mengisi database,
+      atau ubah kata kunci pencarian.
+    </p>
+  </div>
+  {% endif %}
+</section>
+
+<!-- ---------- Grafik ---------- -->
+<section class="panel">
+  <h2>Grafik</h2>
+  <div class="grafik-grid">
+    <img src="{{ url_for('grafik', jenis='harian') }}" alt="Lowongan baru per hari" loading="lazy">
+    <img src="{{ url_for('grafik', jenis='perusahaan') }}" alt="Perusahaan teratas" loading="lazy">
+    <img src="{{ url_for('grafik', jenis='lokasi') }}" alt="Lokasi teratas" loading="lazy">
+    <img src="{{ url_for('grafik', jenis='skill') }}" alt="Skill teratas" loading="lazy">
+  </div>
+</section>
+
+<!-- ---------- Peringkat ---------- -->
+<div class="dua-kolom">
+  <section class="panel">
+    <h2>Skill teratas</h2>
+    {% if skill_teratas %}
+      <ul class="peringkat">
+        {% for nama, jumlah in skill_teratas %}
+        <li>
+          <span>{{ nama }}</span>
+          <span class="jumlah">{{ jumlah }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="sub">Belum ada data skill. Aktifkan <code>DETAIL_SCRAPING_ENABLED</code>.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Perusahaan teratas</h2>
+    <ul class="peringkat">
+      {% for nama, jumlah in perusahaan_teratas %}
+      <li>
+        <span>{{ nama }}</span>
+        <span class="jumlah">{{ jumlah }}</span>
+      </li>
+      {% else %}
+      <li><span class="sub">Belum ada data.</span></li>
+      {% endfor %}
+    </ul>
+
+    <h2 style="margin-top:22px">Lokasi teratas</h2>
+    <ul class="peringkat">
+      {% for nama, jumlah in lokasi_teratas %}
+      <li>
+        <span>{{ nama }}</span>
+        <span class="jumlah">{{ jumlah }}</span>
+      </li>
+      {% else %}
+      <li><span class="sub">Belum ada data.</span></li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+
+<!-- ---------- Riwayat run ---------- -->
+<section class="panel">
+  <h2>Riwayat scraping terakhir</h2>
+  <div class="tabel-bungkus">
+    <table>
+      <thead>
+        <tr>
+          <th>Waktu</th>
+          <th>Sumber</th>
+          <th>Halaman</th>
+          <th>Ditemukan</th>
+          <th>Baru</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in run_terakhir %}
+        <tr>
+          <td class="sub" style="white-space:nowrap">{{ r.started_at | tanggal }}</td>
+          <td>{{ r.source }}</td>
+          <td>{{ r.pages_scraped }}</td>
+          <td>{{ r.jobs_found | angka }}</td>
+          <td>{{ r.jobs_new | angka }}</td>
+          <td>
+            {% if r.status == 'sukses' %}
+              <span class="lencana lencana-aktif">sukses</span>
+            {% else %}
+              <span class="lencana lencana-nonaktif">{{ r.status }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="sub">Belum ada run yang tercatat.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{% endblock %}

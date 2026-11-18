@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block judul %}{{ nama_aplikasi }}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="wadah">
+
+    <header class="header">
+      <div>
+        <h1><a href="{{ url_for('beranda') }}" style="color:inherit">{{ nama_aplikasi }}</a></h1>
+        <div class="meta">
+          Scraping otomatis tiap hari pukul {{ jam_scraping }} WIB
+        </div>
+      </div>
+      <nav>
+        <a href="{{ url_for('beranda') }}">Lowongan</a>
+        <a href="{{ url_for('unduh', jenis='csv') }}">CSV</a>
+        <a href="{{ url_for('unduh', jenis='xlsx') }}">XLSX</a>
+        <a href="{{ url_for('unduh', jenis='docx') }}">DOCX</a>
+      </nav>
+    </header>
+
+    {% block isi %}{% endblock %}
+
+    <footer>
+      <span>Sumber data: dealls.com — dikumpulkan secara akumulatif.</span>
+      <span>Diperbarui {{ dibuat_pada }} WIB</span>
+    </footer>
+  </div>
+</body>
+</html>

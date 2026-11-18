@@ -1,0 +1,384 @@
+/* Dashboard Rekap Lowongan Dealls — gaya sederhana, tanpa dependensi. */
+
+:root {
+  --bg: #f6f7f9;
+  --kartu: #ffffff;
+  --garis: #e3e6ea;
+  --teks: #1a1d21;
+  --teks-lemah: #6b7280;
+  --aksen: #1f6feb;
+  --aksen-lemah: #eaf0fd;
+  --hijau: #0f7b53;
+  --hijau-lemah: #e6f4ee;
+  --merah: #b42318;
+  --merah-lemah: #fdecea;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--teks);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+a {
+  color: var(--aksen);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.wadah {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+}
+
+/* ---------- Header ---------- */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--garis);
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.header .meta {
+  color: var(--teks-lemah);
+  font-size: 12.5px;
+}
+
+.header nav {
+  display: flex;
+  gap: 14px;
+  font-size: 13px;
+}
+
+/* ---------- Kartu statistik ---------- */
+.statistik {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.kartu-angka {
+  background: var(--kartu);
+  border: 1px solid var(--garis);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.kartu-angka .label {
+  color: var(--teks-lemah);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kartu-angka .nilai {
+  font-size: 26px;
+  font-weight: 650;
+  line-height: 1.2;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Panel ---------- */
+.panel {
+  background: var(--kartu);
+  border: 1px solid var(--garis);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.panel h2 {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+/* ---------- Form filter ---------- */
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+input[type="search"],
+select {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--garis);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+}
+
+input[type="search"] {
+  flex: 1 1 240px;
+  min-width: 180px;
+}
+
+input[type="search"]:focus,
+select:focus {
+  outline: 2px solid var(--aksen-lemah);
+  border-color: var(--aksen);
+}
+
+button,
+.tombol {
+  font: inherit;
+  padding: 8px 14px;
+  border: 1px solid var(--aksen);
+  background: var(--aksen);
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover,
+.tombol:hover {
+  filter: brightness(1.06);
+  text-decoration: none;
+}
+
+.tombol-kosong {
+  background: #fff;
+  color: var(--aksen);
+}
+
+/* ---------- Tabel ---------- */
+.tabel-bungkus {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+thead th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--garis);
+  color: var(--teks-lemah);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 12px;
+  border-bottom: 1px solid var(--garis);
+  vertical-align: top;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: #fafbfc;
+}
+
+.judul-lowongan {
+  font-weight: 600;
+}
+
+.sub {
+  color: var(--teks-lemah);
+  font-size: 12.5px;
+  margin-top: 2px;
+}
+
+/* ---------- Label skill ---------- */
+.label-skill {
+  display: inline-block;
+  background: var(--aksen-lemah);
+  color: #1849a9;
+  border-radius: 999px;
+  padding: 1px 9px;
+  font-size: 11.5px;
+  margin: 3px 4px 0 0;
+  white-space: nowrap;
+}
+
+/* ---------- Lencana status ---------- */
+.lencana {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 1px 9px;
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lencana-aktif {
+  background: var(--hijau-lemah);
+  color: var(--hijau);
+}
+
+.lencana-nonaktif {
+  background: var(--merah-lemah);
+  color: var(--merah);
+}
+
+.lencana-baru {
+  background: var(--aksen-lemah);
+  color: #1849a9;
+}
+
+/* ---------- Pagination ---------- */
+.pagination {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.pagination .halaman-info {
+  color: var(--teks-lemah);
+  font-size: 12.5px;
+}
+
+/* ---------- Dua kolom ---------- */
+.dua-kolom {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* ---------- Daftar peringkat ---------- */
+.peringkat {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.peringkat li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px dashed var(--garis);
+  font-size: 13px;
+}
+
+.peringkat li:last-child {
+  border-bottom: none;
+}
+
+.peringkat .jumlah {
+  color: var(--teks-lemah);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---------- Grafik ---------- */
+.grafik-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.grafik-grid img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--garis);
+  border-radius: 8px;
+  background: #fff;
+}
+
+/* ---------- Kosong ---------- */
+.kosong {
+  text-align: center;
+  padding: 44px 20px;
+  color: var(--teks-lemah);
+}
+
+.kosong kode {
+  background: #eef0f3;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 12.5px;
+}
+
+/* ---------- Detail ---------- */
+.detail-header h1 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 650;
+}
+
+.detail-meta {
+  color: var(--teks-lemah);
+  margin-bottom: 20px;
+}
+
+.daftar-definisi {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 8px 16px;
+  margin: 0;
+}
+
+.daftar-definisi dt {
+  color: var(--teks-lemah);
+  font-size: 12.5px;
+}
+
+.daftar-definisi dd {
+  margin: 0;
+}
+
+footer {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--garis);
+  color: var(--teks-lemah);
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .wadah {
+    padding: 16px 14px 48px;
+  }
+  .daftar-definisi {
+    grid-template-columns: 1fr;
+    gap: 2px 0;
+  }
+  .daftar-definisi dd {
+    margin-bottom: 10px;
+  }
+}

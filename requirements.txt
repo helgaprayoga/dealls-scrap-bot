@@ -1,0 +1,31 @@
+# Kebutuhan pustaka bot rekap lowongan Dealls.
+# Python 3.11 atau lebih baru.
+#
+# Catatan penting: ekstra [job-queue] wajib dipasang, karena JobQueue
+# (penjadwal harian) membutuhkan APScheduler. Tanpa itu bot gagal saat
+# memasang jadwal scraping.
+
+python-telegram-bot[job-queue]>=21.0,<23
+requests>=2.31
+beautifulsoup4>=4.12
+lxml>=5.0
+
+# Zona waktu IANA untuk zoneinfo. Wajib di Windows, karena sistem Windows
+# tidak menyediakan basis data zona waktu sehingga ZoneInfo("Asia/Jakarta")
+# akan gagal tanpa paket ini.
+tzdata>=2024.1
+
+# Ekspor dan visualisasi.
+pandas>=2.0
+matplotlib>=3.8
+openpyxl>=3.1
+python-docx>=1.1
+
+# Konfigurasi .env
+python-dotenv>=1.0
+
+# Dashboard web.
+flask>=3.0
+
+# Pengujian
+pytest>=8.0

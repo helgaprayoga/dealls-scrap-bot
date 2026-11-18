@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block judul %}{{ lowongan.title }} — {{ nama_aplikasi }}{% endblock %}
+
+{% block isi %}
+
+<section class="panel">
+  <div class="detail-header">
+    <h1>{{ lowongan.title }}</h1>
+    <div class="detail-meta">
+      {{ lowongan.company or 'Perusahaan tidak dicantumkan' }}
+      {% if lowongan.is_active %}
+        <span class="lencana lencana-aktif">Aktif</span>
+      {% else %}
+        <span class="lencana lencana-nonaktif">Nonaktif</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <dl class="daftar-definisi">
+    <dt>Tipe pekerjaan</dt>
+    <dd>{{ lowongan.job_type or '—' }}</dd>
+
+    <dt>Mode kerja</dt>
+    <dd>{{ lowongan.work_mode or '—' }}</dd>
+
+    <dt>Lokasi</dt>
+    <dd>{{ lowongan.location or '—' }}</dd>
+
+    <dt>Tingkat pengalaman</dt>
+    <dd>{{ lowongan.experience_level or '—' }}</dd>
+
+    <dt>Gaji</dt>
+    <dd>{{ lowongan.salary_text or '—' }}</dd>
+
+    <dt>Sumber</dt>
+    <dd>{{ lowongan.source or '—' }}</dd>
+
+    <dt>Pertama terlihat</dt>
+    <dd>{{ lowongan.first_seen_at | tanggal }} WIB</dd>
+
+    <dt>Terakhir terlihat</dt>
+    <dd>{{ lowongan.last_seen_at | tanggal }} WIB</dd>
+
+    <dt>Skill</dt>
+    <dd>
+      {% for s in lowongan.skills %}
+        <span class="label-skill">{{ s }}</span>
+      {% else %}
+        <span class="sub">Belum ada data skill.</span>
+      {% endfor %}
+    </dd>
+  </dl>
+
+  <p style="margin-top:22px">
+    {% if lowongan.url %}
+      <a class="tombol" href="{{ lowongan.url }}" target="_blank" rel="noopener">
+        Buka di dealls.com
+      </a>
+    {% endif %}
+    <a class="tombol tombol-kosong" href="{{ url_for('beranda') }}">← Kembali</a>
+  </p>
+</section>
+
+{% endblock %}
